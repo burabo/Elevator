@@ -1,4 +1,4 @@
-public class Portas {
+public class Portas implements Runnable {
 
     /*
      * true: aberto; false: fechado
@@ -17,5 +17,10 @@ public class Portas {
 
     public void setEstado(boolean estado) {
         this.estado = estado;
+    }
+
+    @Override
+    public void run() {
+
     }
 }
