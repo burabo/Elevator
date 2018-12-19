@@ -9,7 +9,7 @@ public class Main {
         int x, i;
         int PISOS = 5;
         Scanner scanner = new Scanner(System.in);
-        Portas porta = new Portas(false, sem);
+        Portas porta = new Portas(false);
 
         do {
             do {
@@ -27,9 +27,19 @@ public class Main {
                 System.out.println("Introduza a opção pretendida: ");
                 x = scanner.nextInt();
             } while (x > 0 && x < 5);
-            switch (x){
+            switch (x) {
                 case 1:
-                   break;
+                     break;
+                case 6:
+                    new Portas("Porta thread ", sem);
+                    try {
+                        Thread.sleep(16000);
+                    } catch (InterruptedException e) {
+                        System.out.println("Main thread Interrupted");
+                    }
+                    System.out.println("Main thread exiting.");
+
+                    break;
             }
         }while(x != 0);
 
