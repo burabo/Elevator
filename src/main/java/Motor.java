@@ -4,8 +4,6 @@ public class Motor extends Thread{
 
     Semaphore sem;
 
-
-
     /**
      *
      */
