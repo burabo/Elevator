@@ -11,6 +11,4 @@ public class GUI {
         frame.pack();
         frame.setVisible(true);
     }
-
-
 }

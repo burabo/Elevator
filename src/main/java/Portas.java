@@ -10,17 +10,19 @@ public class Portas implements Runnable {
     String nome;
     Thread t;
     boolean estado;
+    Boolean doorOpenButton;
 
     public Portas(boolean estado){
         this.estado = estado;
     }
 
-    public Portas(String thread, Semaphore sem) {
+    public Portas(String thread, Semaphore sem, Boolean doorOpenButton) {
         this.nome = thread;
         this.sem = sem;
         t = new Thread(this, nome);
         System.out.println("Nova Thread " + t);
         t.start();
+        this.doorOpenButton = doorOpenButton; //Estado do butao para abir a porta. Deve ter o comportamento esperado...
     }
 
     public boolean isEstado() {
