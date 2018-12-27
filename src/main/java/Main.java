@@ -12,6 +12,9 @@ public class Main {
         Cabin cabin = new Cabin();
         */
 
+        Cabin cabin = new Cabin();
+
+
     }
 
 }

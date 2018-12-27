@@ -3,16 +3,17 @@ import java.util.concurrent.Semaphore;
 
 public class Botoneira {
 
-    Semaphore moveSem = new Semaphore(1);
-    int x, i;
-    final int FLOORS = 5;
+    final int FLOORS = 5; // Default number of floors
     Scanner scanner = new Scanner(System.in);
-    Portas porta = new Portas(false);
-    SortedSet<Integer> pressedFloors;
+    Semaphore moveSem; //moveSem was already created in Cabin
+    Portas porta = new Portas(false); //New Portas Object
+    SortedSet<Integer> pressedFloors; // ???
+    int option, i;
 
     public Botoneira(Semaphore moveSem) {
-        pressedFloors = new TreeSet<Integer>();
-        this.moveSem = moveSem;
+        pressedFloors = new TreeSet<Integer>(); //???
+        this.moveSem = moveSem; //this.moveSem = moveSem from Cabin
+        menu(); //Runs menu()
     }
 
     public void menu() {
@@ -31,12 +32,28 @@ public class Botoneira {
                 System.out.println((i++) + ". Abrir Porta");
                 System.out.println((i++) + ". Fechar Porta\n");
                 System.out.println("Introduza a opção pretendida: ");
-                x = scanner.nextInt();
-            } while (x > 0 && x < 5);
+                option = scanner.nextInt();
+            } while (option > 0 && option < 5);
 
-            pressedFloors.add(x);
+            pressedFloors.add(option); //???
 
-            System.out.println("PREMIU " + x);
-        } while (x != 0);
+            System.out.println("PREMIU " + option);
+
+            switch (option) {
+                case 1:
+                    break;
+                case 6:
+                    new Portas("Porta thread ", moveSem, false); //Returns moveSem and ???
+                    try {
+                        Thread.sleep(16000);
+                    } catch (InterruptedException e) {
+                        System.out.println("Main thread Interrupted");
+                    }
+                    System.out.println("Main thread exiting.");
+
+                    break;
+            }
+
+        } while (option != 0);
     }
 }
