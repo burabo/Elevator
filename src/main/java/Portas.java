@@ -6,7 +6,7 @@ public class Portas implements Runnable {
      * true: aberto; false: fechado
      */
 
-    Semaphore sem;
+    Semaphore doorSem;
     String nome;
     Thread t;
     boolean estado;
@@ -16,9 +16,9 @@ public class Portas implements Runnable {
         this.estado = estado;
     }
 
-    public Portas(String thread, Semaphore sem, Boolean doorOpenButton) {
+    public Portas(String thread, Semaphore doorSem, Boolean doorOpenButton) {
         this.nome = thread;
-        this.sem = sem;
+        this.doorSem = doorSem;
         t = new Thread(this, nome);
         System.out.println("Nova Thread " + t);
         t.start();
@@ -36,7 +36,7 @@ public class Portas implements Runnable {
     @Override
     public void run() {
         try {
-            sem.acquire();
+            doorSem.acquire();
             try {
                 System.out.println("Porta está a abrir");
                 Thread.sleep(5000);
@@ -53,7 +53,7 @@ public class Portas implements Runnable {
                 System.out.println(nome + "Interrupted");
             }
             System.out.println(nome + " exiting.");
-            sem.release();
+            doorSem.release();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

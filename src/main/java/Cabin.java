@@ -1,23 +1,45 @@
 import java.util.concurrent.Semaphore;
 
+
 public class Cabin {
 
-    //Portas doors; //New Portas Object
-    //Motor motor; //New Motor object
-    Semaphore moveSem = new Semaphore(1); //New Semaphore Object
-    Botoneira buttons = new Botoneira(moveSem); //New Botoneira Object
+    final int FLOORS = 5; // Default number of floors
+    Semaphore moveSem; //New Semaphore Object
+    Semaphore doorSem; //New Semaphore Object
+    Portas porta; //New Portas Object
     int currentFloor;
 
-    /*
-    public Cabin(Botoneira buttons, Portas doors, Motor motor, Semaphore moveSem) {
-        this.buttons = buttons;
-        this.doors = doors;
-        this.motor = motor;
-        this.moveSem = moveSem;
+    public Cabin(){
+        moveSem = new Semaphore(1);
+        doorSem = new Semaphore(1);
+        porta = new Portas(false);
+        currentFloor = 0;
     }
-    */
 
 
+    public void changeFloor(int option){
+
+        new Motor("Motor thread", doorSem, moveSem, option);
+        try {
+            Thread.sleep(6000);
+        } catch (InterruptedException e) {
+            System.out.println("Main thread Interrupted");
+        }
+        System.out.println("Main thread exiting.");
+
+    }
+
+    public void openDoor(){
+
+        new Portas("Porta thread ", doorSem, false); //Returns moveSem and ???
+        try {
+            Thread.sleep(16000);
+        } catch (InterruptedException e) {
+            System.out.println("Main thread Interrupted");
+        }
+        System.out.println("Main thread exiting.");
+
+    }
 
     /*
      * Returns the current floor
@@ -28,22 +50,31 @@ public class Cabin {
     }
 
     /*
-     * Returns the next floor(?)
+     * Returns the next floor
      *
      */
     public int getNextFloor(){
-        return 0;
+        return currentFloor + 1;
+    }
 
+    /*
+     * Returns the previous floor
+     *
+     */
+    public int getPreviousFloor(){
+        return currentFloor - 1;
     }
 
     /*
      * Define current floor(?)
      *
      */
-    public void setCurrentFloor(int floor) throws Exception {
+    public void setCurrentFloor(int floor){ // throws Exception {
+        /*
         if(floor<0){
             throw new Exception();
         }
+        */
         currentFloor = floor;
     }
 }
