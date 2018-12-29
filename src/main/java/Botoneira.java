@@ -5,7 +5,7 @@ public class Botoneira extends Cabin{
 
     Scanner scanner = new Scanner(System.in);
     SortedSet<Integer> pressedFloors; // ???
-    int option, i;
+    protected int option, i;
 
 
     public Botoneira() {
@@ -38,11 +38,14 @@ public class Botoneira extends Cabin{
             switch (option) {
                 case 0:
                 case 1:
-                        changeFloor(option);
-                    //Não há break visto que quando chega ao piso pretendido abrem-se as Portas
+                case 2:
+                case 3:
+                case 4:
+                    changeFloor(option);
+                        //Não há break visto que quando chega ao piso pretendido abrem-se as Portas
                 case 5:
-                    openDoor();
-                    break;
+                        openDoor();
+                        break;
             }
 
         } while (option != 9);

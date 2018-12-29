@@ -3,11 +3,11 @@ import java.util.concurrent.Semaphore;
 
 public class Cabin {
 
-    final int FLOORS = 5; // Default number of floors
+    protected final int FLOORS = 5; // Default number of floors
     Semaphore moveSem; //New Semaphore Object
     Semaphore doorSem; //New Semaphore Object
-    Portas porta; //New Portas Object
-    int currentFloor;
+    protected Portas porta; //New Portas Object
+    protected static int currentFloor;
 
     public Cabin(){
         moveSem = new Semaphore(1);
@@ -21,7 +21,7 @@ public class Cabin {
 
         new Motor("Motor thread", doorSem, moveSem, option);
         try {
-            Thread.sleep(6000);
+            Thread.sleep(6000 * option);
         } catch (InterruptedException e) {
             System.out.println("Main thread Interrupted");
         }
@@ -33,7 +33,7 @@ public class Cabin {
 
         new Portas("Porta thread ", doorSem, false); //Returns moveSem and ???
         try {
-            Thread.sleep(16000);
+            Thread.sleep(12000);
         } catch (InterruptedException e) {
             System.out.println("Main thread Interrupted");
         }

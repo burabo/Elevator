@@ -8,7 +8,7 @@ public class Motor extends Cabin implements Runnable {
     String nome;
     Thread motor;
     //boolean goingUp;
-    int selectedFloor;
+    protected int selectedFloor;
 
     /**
      *
@@ -22,14 +22,21 @@ public class Motor extends Cabin implements Runnable {
                 System.out.println("Já está no piso seleccionado");
             }else if (Integer.compare(selectedFloor, getCurrentFloor()) < 0){
                 System.out.println("Elevador está a descer");
-                Thread.sleep(5000);
+                while(getCurrentFloor() > selectedFloor) {
+                    Thread.sleep(5000);
+                    currentFloor--;
+                    System.out.println("Piso " + getCurrentFloor());
+                }
                 System.out.println("Já chegamos!");
-                currentFloor--;
             }else{
                 System.out.println("Elevador está a subir");
-                Thread.sleep(5000);
+                while(getCurrentFloor() < selectedFloor) {
+                    Thread.sleep(5000);
+                    currentFloor++;
+                    System.out.println("Piso " + getCurrentFloor());
+
+                }
                 System.out.println("Já chegamos!");
-                setCurrentFloor(currentFloor++);
             }
             /*
             if(goingUp){

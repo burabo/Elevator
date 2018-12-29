@@ -9,7 +9,7 @@ public class Portas implements Runnable {
     Semaphore doorSem;
     String nome;
     Thread t;
-    boolean estado;
+    protected boolean estado;
     Boolean doorOpenButton;
 
     public Portas(boolean estado){
@@ -39,12 +39,12 @@ public class Portas implements Runnable {
             doorSem.acquire();
             try {
                 System.out.println("Porta está a abrir");
-                Thread.sleep(5000);
+                Thread.sleep(3000);
                 estado = true;
                 System.out.println("Porta aberta. Estado:" + estado);
                 Thread.sleep(5000);
                 System.out.println("Porta está a fechar");
-                Thread.sleep(5000);
+                Thread.sleep(3000);
                 estado = false;
                 System.out.println("Porta fechada. Estado:" + estado);
 
