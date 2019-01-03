@@ -5,7 +5,6 @@ public class Portas implements Runnable {
     /*
      * true: aberto; false: fechado
      */
-
     Semaphore doorSem;
     String nome;
     Thread t;

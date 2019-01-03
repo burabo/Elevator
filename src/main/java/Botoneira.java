@@ -2,18 +2,21 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
-public class Botoneira{
+public class Botoneira implements Runnable{
 
     Scanner scanner = new Scanner(System.in);
     protected int option, i;
+    Thread buttons;
     Cabin cabin;
 
     public Botoneira(Cabin cabin) {
+        buttons = new Thread(this, "Botoneira");
         this.cabin = cabin;
+        buttons.start();
     }
 
 
-    public void menu() throws IOException, InterruptedException {
+    public void menu() throws InterruptedException {
 
         do {
             do {
@@ -32,8 +35,6 @@ public class Botoneira{
                 option = scanner.nextInt();
             } while (option < 0 && option > 5);
 
-//            pressedFloors.add(option); //???
-
             System.out.println("PREMIU " + option);
 
             switch (option) {
@@ -42,12 +43,25 @@ public class Botoneira{
                 case 2:
                 case 3:
                 case 4:
-                    cabin.pressedFloors.add(option);
-                    cabin.determineNextFloor();
+                    System.out.print("Selecionou o piso " + option);
+                    pressFloor(option);
                 case 5:
                         cabin.tryToOpenDoor();
                         break;
             }
         } while (option != 9);
+    }
+
+    void pressFloor(int i){
+        cabin.addFloor(i);
+    }
+
+    @Override
+    public void run() {
+        try {
+            menu();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -32,8 +32,9 @@ public class Motor implements Runnable {
             try {
                 //acquiring lock
                 moveSem.acquire();
-                cabin.direction = (cabin.nextFloor-cabin.currentFloor)*abs(cabin.nextFloor-cabin.currentFloor); //1 para subir, 2 para descer
-                cabin.currentFloor+= cabin.direction;
+                while (cabin.currentFloor!=cabin.nextFloor){
+                    cabin.currentFloor+=cabin.direction;
+                }
                 //releasing the lock
                 moveSem.release();
                 Thread.sleep(timeBetweenFloors);
