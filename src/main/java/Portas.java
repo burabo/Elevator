@@ -25,7 +25,7 @@ public class Portas implements Runnable {
         this.doorOpenButton = doorOpenButton; //Estado do butao para abir a porta. Deve ter o comportamento esperado...
     }
 
-    public boolean isEstado() {
+    public boolean isOpen() {
         return estado;
     }
 
@@ -47,7 +47,6 @@ public class Portas implements Runnable {
                 Thread.sleep(3000);
                 estado = false;
                 System.out.println("Porta fechada. Estado:" + estado);
-
 
             }catch (InterruptedException e) {
                 System.out.println(nome + "Interrupted");

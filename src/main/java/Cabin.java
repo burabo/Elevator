@@ -1,44 +1,39 @@
+import java.io.IOException;
+import java.util.SortedSet;
 import java.util.concurrent.Semaphore;
 
 
 public class Cabin {
 
     protected final int FLOORS = 5; // Default number of floors
-    Semaphore moveSem; //New Semaphore Object
-    Semaphore doorSem; //New Semaphore Object
-    protected Portas porta; //New Portas Object
-    protected static int currentFloor;
+    Semaphore moveSem; //Lock do movimento do motor
+    Semaphore doorSem; //Lock da abertura das portas
+    protected Portas porta; //Referência para portas
+    int currentFloor;
+    int direction; //1 or -1;
+    SortedSet<Integer> pressedFloors;
+    int nextFloor;
 
-    public Cabin(){
+    public Cabin(Portas porta, Semaphore doorSem){
         moveSem = new Semaphore(1);
-        doorSem = new Semaphore(1);
-        porta = new Portas(false);
+        this.porta = porta;
         currentFloor = 0;
     }
 
-
-    public void changeFloor(int option){
-
-        new Motor("Motor thread", doorSem, moveSem, option);
-        try {
-            Thread.sleep(6000 * option);
-        } catch (InterruptedException e) {
-            System.out.println("Main thread Interrupted");
-        }
-        System.out.println("Main thread exiting.");
-
+    public void tryToOpenDoor() throws InterruptedException {
+        if(moveSem.tryAcquire())
+        moveSem.acquire();
+        doorSem.release();
+        Thread.sleep(3000);
+        doorSem.acquire();
+        moveSem.acquire();
     }
 
-    public void openDoor(){
+    public void goToNextFloor() throws InterruptedException {
 
-        new Portas("Porta thread ", doorSem, false); //Returns moveSem and ???
-        try {
-            Thread.sleep(12000);
-        } catch (InterruptedException e) {
-            System.out.println("Main thread Interrupted");
-        }
-        System.out.println("Main thread exiting.");
-
+        moveSem.release();
+        Thread.sleep(10);
+        moveSem.acquire();
     }
 
     /*
@@ -53,28 +48,30 @@ public class Cabin {
      * Returns the next floor
      *
      */
-    public int getNextFloor(){
-        return currentFloor + 1;
-    }
-
-    /*
-     * Returns the previous floor
-     *
-     */
-    public int getPreviousFloor(){
-        return currentFloor - 1;
-    }
-
-    /*
-     * Define current floor(?)
-     *
-     */
-    public void setCurrentFloor(int floor){ // throws Exception {
-        /*
-        if(floor<0){
-            throw new Exception();
+    public void determineNextFloor(){
+        if(direction==1){
+            nextFloor = pressedFloors.subSet(currentFloor+1, FLOORS).first();
         }
-        */
-        currentFloor = floor;
+        else if(direction==-1) {
+            nextFloor = pressedFloors.headSet(currentFloor).last();
+        }
+    }
+
+    public static void main(String[] args) {
+
+        //Problema: Elevador começa sempre do piso 0
+        Boolean doorOpenButton = true;
+        Semaphore doorSem = new Semaphore(1);
+        Portas porta = new Portas("Portas", doorSem, doorOpenButton);
+        Cabin cabin = new Cabin(porta, doorSem);
+        Motor motor = new Motor("Motor XPTO 500", cabin, 5000);
+        Botoneira botoneira = new Botoneira(cabin);
+        try {
+            botoneira.menu();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

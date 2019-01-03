@@ -1,29 +1,30 @@
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
-public class Botoneira extends Cabin{
+public class Botoneira{
 
     Scanner scanner = new Scanner(System.in);
-    SortedSet<Integer> pressedFloors; // ???
     protected int option, i;
+    Cabin cabin;
 
-
-    public Botoneira() {
+    public Botoneira(Cabin cabin) {
+        this.cabin = cabin;
     }
 
 
-    public void menu() {
+    public void menu() throws IOException, InterruptedException {
 
         do {
             do {
                 System.out.println("|***Informações***|\n");
-                System.out.println("Encontra-se no piso " + getCurrentFloor());
-                if (porta.isEstado())
+                System.out.println("Encontra-se no piso " + cabin.getCurrentFloor());
+                if (cabin.porta.isOpen())
                     System.out.println("As portas encontram-se abertas\n");
                 else
                     System.out.println("As portas encontram-se fechadas\n");
                 System.out.println("|***Botoneira***|\n");
-                for (i = 0; i < FLOORS; i++)
+                for (i = 0; i < cabin.FLOORS; i++)
                     System.out.println(i + ". Piso " + i);
                 System.out.println((i++) + ". Abrir Porta");
                 System.out.println((i++) + ". Fechar Porta\n");
@@ -41,13 +42,12 @@ public class Botoneira extends Cabin{
                 case 2:
                 case 3:
                 case 4:
-                    changeFloor(option);
-                        //Não há break visto que quando chega ao piso pretendido abrem-se as Portas
+                    cabin.pressedFloors.add(option);
+                    cabin.determineNextFloor();
                 case 5:
-                        openDoor();
+                        cabin.tryToOpenDoor();
                         break;
             }
-
         } while (option != 9);
     }
 }
