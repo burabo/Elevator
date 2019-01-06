@@ -42,7 +42,9 @@ public class GUI extends JFrame implements ActionListener {
 
     public void actionPerformed(ActionEvent e){
         Container contentPane = getContentPane();
-        textArea.append(""+e.getActionCommand().charAt(0));
+        String key =""+e.getActionCommand().charAt(0);
+        textArea.append(key);
+        System.out.println();
         cabin.addFloor(e.getActionCommand().charAt(0));
 
     }

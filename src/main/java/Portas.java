@@ -11,7 +11,7 @@ public class Portas implements Runnable {
     protected boolean estado;
     Boolean doorOpenButton;
 
-    public Portas(boolean estado){
+    public Portas(boolean estado) {
         this.estado = estado;
     }
 
@@ -19,7 +19,6 @@ public class Portas implements Runnable {
         this.nome = thread;
         this.doorSem = doorSem;
         t = new Thread(this, nome);
-        System.out.println("Nova Thread " + t);
         t.start();
         this.doorOpenButton = doorOpenButton; //Estado do butao para abir a porta. Deve ter o comportamento esperado...
     }
@@ -34,9 +33,9 @@ public class Portas implements Runnable {
 
     @Override
     public void run() {
-        try {
-            doorSem.acquire();
+        while (!t.isInterrupted()) {
             try {
+                doorSem.acquire();
                 System.out.println("Porta está a abrir");
                 Thread.sleep(3000);
                 estado = true;
@@ -46,14 +45,11 @@ public class Portas implements Runnable {
                 Thread.sleep(3000);
                 estado = false;
                 System.out.println("Porta fechada. Estado:" + estado);
+                doorSem.release();
 
-            }catch (InterruptedException e) {
+            } catch (InterruptedException e) {
                 System.out.println(nome + "Interrupted");
-            }
-            System.out.println(nome + " exiting.");
-            doorSem.release();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            }System.out.println(nome + " exiting.");
         }
     }
 }

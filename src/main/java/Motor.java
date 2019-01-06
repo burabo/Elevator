@@ -35,9 +35,8 @@ public class Motor implements Runnable {
                 while (cabin.currentFloor!=cabin.nextFloor){
                     Thread.sleep(timeBetweenFloors);
                     cabin.currentFloor+=cabin.direction;
-                    System.out.println("IN FLOOR"+cabin.currentFloor);
+                    System.out.println("\nIN FLOOR"+cabin.currentFloor);
                 }
-                System.out.println("SIZE  "+cabin.pressedFloors.size());
                 //releasing the lock
                 moveSem.release();
             } catch (InterruptedException e) {
