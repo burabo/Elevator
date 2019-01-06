@@ -1,15 +1,10 @@
-import java.io.IOException;
+import java.util.Scanner;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.Semaphore;
-import java.util.logging.FileHandler;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 public class Cabin {
 
-    Logger logger = Logger.getLogger("MyLog"); //New Logger Object
-    FileHandler fh;
     static final int FLOORS = 9; // Default number of floors
     Semaphore moveSem; //Lock do movimento do motor
     Semaphore doorSem; //Lock da abertura das portas
@@ -19,26 +14,28 @@ public class Cabin {
     SortedSet<Integer> pressedFloors; //Conjunto Ordenado dos floors
     Integer nextFloor;
     Botoneira buttons;
+    Properties prop = new Properties();
+    String fileName = "about.config";
+    InputStream is = null;
+
 
     public Cabin(Semaphore doorSem){
+        try {
+            is = new FileInputStream(fileName);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            prop.load(is);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        FLOORS = Integer.valueOf(prop.getProperty("FLOORS"));
         pressedFloors = new TreeSet<>();
         moveSem = new Semaphore(0, true);
         this.doorSem = doorSem;
         //this.porta = porta;
         currentFloor = 0;
-        try {
-
-            // This block configure the logger with handler and formatter
-            fh = new FileHandler("MyLogFile.log");
-            logger.addHandler(fh);
-            SimpleFormatter formatter = new SimpleFormatter();
-            fh.setFormatter(formatter);
-
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
     public void setButtons(Botoneira buttons){
         this.buttons = buttons;
@@ -60,15 +57,6 @@ public class Cabin {
         moveSem.acquire();
         pressedFloors.remove(currentFloor);
         tryToOpenDoor();
-    }
-
-    public void logger(int option){
-        if(option<FLOORS && option>=0){
-            logger.info("O elevador foi para o piso  " + option);
-        }
-        if (option == FLOORS){
-            logger.info("As portas foram abertas");
-        }
     }
 
     public void determineNextFloor(){
