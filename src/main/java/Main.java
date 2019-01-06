@@ -1,3 +1,4 @@
+/*
 import java.util.concurrent.Semaphore;
 
 public class Main {
@@ -12,3 +13,21 @@ public class Main {
     }
 
 }
+*/
+
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.*;
+
+public class Main{
+
+    public static void main(String[] args) {
+
+        Cabin cabin = new Cabin(); //Creation of an object Cabin
+        Motor motor = new Motor(); //Creation of an object Motor
+        Botoneira botoneira = new Botoneira(); //Creation of an object Botoneira
+    }
+
+}
+

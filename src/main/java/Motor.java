@@ -38,15 +38,6 @@ public class Motor extends Cabin implements Runnable {
                 }
                 System.out.println("Já chegamos!");
             }
-            /*
-            if(goingUp){
-                cabin.currentFloor++;
-            }
-            else {
-                cabin.currentFloor--;
-            }
-            */
-
 
             }catch (InterruptedException e) {
                 System.out.println(nome + "Interrupted");

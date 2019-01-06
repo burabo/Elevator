@@ -1,53 +1,105 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
 public class Botoneira extends Cabin{
 
     Scanner scanner = new Scanner(System.in);
-    SortedSet<Integer> pressedFloors; // ???
-    protected int option, i;
+    protected int i;
+
+    java.awt.Frame frame = new java.awt.Frame("Botoneira");
+    Button open = new Button("<>");
+    Button close = new Button("><");
+    Button floor0 = new Button("0");
+    Button floor1 = new Button("1");
+    Button floor2 = new Button("2");
+    Button floor3 = new Button("3");
+    Button floor4 = new Button("4");
 
 
     public Botoneira() {
+        frame.add(open);
+        frame.add(close);
+        frame.add(floor0);
+        frame.add(floor1);
+        frame.add(floor2);
+        frame.add(floor3);
+        frame.add(floor4);
+        frame.setSize(280, 150); //set the layout
+        //specify the layout to have 2 rows and 2 columns
+        frame.setLayout(new GridLayout(2, 2));
+        frame.setVisible(true);
+        menu();
     }
 
 
     public void menu() {
 
-        do {
-            do {
-                System.out.println("|***Informações***|\n");
-                System.out.println("Encontra-se no piso " + getCurrentFloor());
-                if (porta.isEstado())
-                    System.out.println("As portas encontram-se abertas\n");
-                else
-                    System.out.println("As portas encontram-se fechadas\n");
-                System.out.println("|***Botoneira***|\n");
-                for (i = 0; i < FLOORS; i++)
-                    System.out.println(i + ". Piso " + i);
-                System.out.println((i++) + ". Abrir Porta");
-                System.out.println((i++) + ". Fechar Porta\n");
-                System.out.println("Introduza a opção pretendida: ");
-                option = scanner.nextInt();
-            } while (option < 0 && option > 5);
+            System.out.println("|***Informações***|\n");
+            System.out.println("Encontra-se no piso " + getCurrentFloor());
+            if (porta.isEstado())
+                System.out.println("As portas encontram-se abertas\n");
+            else
+                System.out.println("As portas encontram-se fechadas\n");
 
-//            pressedFloors.add(option); //???
 
-            System.out.println("PREMIU " + option);
+            floor0.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    //ta1.append("Porta aberta!\n");
+                    changeFloor(0);
+                    openDoor();
+                }
+            });
 
-            switch (option) {
-                case 0:
-                case 1:
-                case 2:
-                case 3:
-                case 4:
-                    changeFloor(option);
-                        //Não há break visto que quando chega ao piso pretendido abrem-se as Portas
-                case 5:
-                        openDoor();
-                        break;
+        floor1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //ta1.append("Porta aberta!\n");
+                changeFloor(1);
+                openDoor();
             }
+        });
 
-        } while (option != 9);
+        floor2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //ta1.append("Porta aberta!\n");
+                changeFloor(2);
+                openDoor();
+            }
+        });
+
+        floor3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //ta1.append("Porta aberta!\n");
+                changeFloor(3);
+                openDoor();
+            }
+        });
+
+        floor4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //ta1.append("Porta aberta!\n");
+                changeFloor(4);
+                openDoor();
+            }
+        });
+
+            //Não há break visto que quando chega ao piso pretendido abrem-se as Portas
+
+        open.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    //ta1.append("Porta aberta!\n");
+                    openDoor();
+                }
+            });
+
     }
 }

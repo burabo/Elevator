@@ -1,21 +1,40 @@
+import java.io.IOException;
 import java.util.concurrent.Semaphore;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 
 public class Cabin {
 
     protected final int FLOORS = 5; // Default number of floors
-    Semaphore moveSem; //New Semaphore Object
-    Semaphore doorSem; //New Semaphore Object
+    Semaphore moveSem; //New Semaphore Object for Motor
+    Semaphore doorSem; //New Semaphore Object for Portas
     protected Portas porta; //New Portas Object
-    protected static int currentFloor;
+    protected static int currentFloor; //number of the current floor
+    Logger logger = Logger.getLogger("MyLog"); //New Logger Object
+    FileHandler fh; //new FileHandler Object
 
+    //Constructor
     public Cabin(){
         moveSem = new Semaphore(1);
         doorSem = new Semaphore(1);
         porta = new Portas(false);
         currentFloor = 0;
-    }
+        try {
 
+            // This block configure the logger with handler and formatter
+            fh = new FileHandler("MyLogFile.log");
+            logger.addHandler(fh);
+            SimpleFormatter formatter = new SimpleFormatter();
+            fh.setFormatter(formatter);
+
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void changeFloor(int option){
 
@@ -26,6 +45,7 @@ public class Cabin {
             System.out.println("Main thread Interrupted");
         }
         System.out.println("Main thread exiting.");
+        logger(1);
 
     }
 
@@ -38,6 +58,7 @@ public class Cabin {
             System.out.println("Main thread Interrupted");
         }
         System.out.println("Main thread exiting.");
+        logger(5);
 
     }
 
@@ -77,4 +98,20 @@ public class Cabin {
         */
         currentFloor = floor;
     }
+
+    public void logger(int option){
+
+        switch(option){
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+                logger.info("O elevador foi para o piso  " + option);
+            case 5:
+                logger.info("As portas foram abertas");
+                break;
+        }
+
+    }
+
 }
