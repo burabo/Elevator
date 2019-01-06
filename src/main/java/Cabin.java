@@ -13,6 +13,7 @@ public class Cabin {
     int direction = 1; //1 or -1;
     SortedSet<Integer> pressedFloors; //Conjunto Ordenado dos floors
     Integer nextFloor;
+    Botoneira buttons;
 
     public Cabin(Semaphore doorSem){
         pressedFloors = new TreeSet<>();
@@ -21,11 +22,16 @@ public class Cabin {
         //this.porta = porta;
         currentFloor = 0;
     }
+    public void setButtons(Botoneira buttons){
+        this.buttons = buttons;
+    }
 
     public void tryToOpenDoor() throws InterruptedException {
         doorSem.release();
         Thread.currentThread().sleep(3000);
         doorSem.acquire();
+        buttons.menu();
+
     }
 
     public void goToNextSelectedFloor() throws InterruptedException {
@@ -104,11 +110,8 @@ public class Cabin {
         Portas porta = new Portas("Portas", doorSem, true);
         Cabin cabin = new Cabin( doorSem);
         Motor motor = new Motor("Motor XPTO 500", cabin, 1000);
-        Botoneira botoneira = new Botoneira(cabin);
-        GUI botons = new GUI(cabin);
-        botons.setVisible(true);
-
-
+        Botoneira botoneira = new Botoneira(cabin, porta);
+        cabin.setButtons(botoneira);
 
 /*
         Semaphore doorSem = new Semaphore(0);
