@@ -1,3 +1,8 @@
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 import java.util.Scanner;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -5,7 +10,7 @@ import java.util.concurrent.Semaphore;
 
 public class Cabin {
 
-    static final int FLOORS = 9; // Default number of floors
+    final int FLOORS;
     Semaphore moveSem; //Lock do movimento do motor
     Semaphore doorSem; //Lock da abertura das portas
     //protected Portas porta; //Referência para portas
@@ -14,8 +19,23 @@ public class Cabin {
     SortedSet<Integer> pressedFloors; //Conjunto Ordenado dos floors
     Integer nextFloor;
     Botoneira buttons;
+    Properties prop = new Properties();
+    String fileName = "about.config";
+    InputStream is = null;
+
 
     public Cabin(Semaphore doorSem){
+        try {
+            is = new FileInputStream(fileName);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            prop.load(is);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        FLOORS = Integer.valueOf(prop.getProperty("FLOORS"));
         pressedFloors = new TreeSet<>();
         moveSem = new Semaphore(0, true);
         this.doorSem = doorSem;
