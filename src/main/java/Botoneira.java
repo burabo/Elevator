@@ -22,10 +22,11 @@ public class Botoneira implements Runnable{
             do {
                 System.out.println("|***Informações***|\n");
                 System.out.println("Encontra-se no piso " + cabin.getCurrentFloor());
-                if (cabin.porta.isOpen())
+                /*if (cabin.porta.isOpen())
                     System.out.println("As portas encontram-se abertas\n");
                 else
                     System.out.println("As portas encontram-se fechadas\n");
+                    */
                 System.out.println("|***Botoneira***|\n");
                 for (i = 0; i < cabin.FLOORS; i++)
                     System.out.println(i + ". Piso " + i);
@@ -46,7 +47,7 @@ public class Botoneira implements Runnable{
                     System.out.print("Selecionou o piso " + option);
                     pressFloor(option);
                 case 5:
-                        cabin.tryToOpenDoor();
+                        //cabin.tryToOpenDoor();
                         break;
             }
         } while (option != 9);

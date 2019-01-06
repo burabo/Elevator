@@ -33,11 +33,13 @@ public class Motor implements Runnable {
                 //acquiring lock
                 moveSem.acquire();
                 while (cabin.currentFloor!=cabin.nextFloor){
+                    Thread.sleep(timeBetweenFloors);
                     cabin.currentFloor+=cabin.direction;
+                    System.out.println("IN FLOOR"+cabin.currentFloor);
                 }
+                System.out.println("SIZE  "+cabin.pressedFloors.size());
                 //releasing the lock
                 moveSem.release();
-                Thread.sleep(timeBetweenFloors);
             } catch (InterruptedException e) {
                 System.err.println("MOTOR INTERROMPIDO");
             }

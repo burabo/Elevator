@@ -5,19 +5,21 @@ import java.awt.event.*;
 public class GUI extends JFrame implements ActionListener {
     public static final int WIDTH = 300;
     public static final int HEIGHT = 200;
+    Cabin cabin;
 
     /*************************************************
      *Creates and displays a window of the class ButtonDemo.
      *************************************************/
     public static void main(String[] args)
     {
-        GUI buttonGui = new GUI();
-        buttonGui.setVisible(true);
+        //GUI buttonGui = new GUI();
+        //buttonGui.setVisible(true);
     }
     final JTextArea textArea;
 
-    public GUI()
+    public GUI(Cabin cabin)
     {
+        this.cabin = cabin;
         setSize(WIDTH, HEIGHT);
 
         setTitle("Button Demo");
@@ -41,5 +43,7 @@ public class GUI extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e){
         Container contentPane = getContentPane();
         textArea.append(""+e.getActionCommand().charAt(0));
+        cabin.addFloor(e.getActionCommand().charAt(0));
+
     }
 }
