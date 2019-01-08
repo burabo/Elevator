@@ -37,8 +37,7 @@ public class Motor implements Runnable {
                     cabin.currentFloor+=cabin.direction;
                     System.out.println("\nIN FLOOR"+cabin.currentFloor);
                 }
-                //releasing the lock
-                moveSem.release();
+
             } catch (InterruptedException e) {
                 System.err.println("MOTOR INTERROMPIDO");
             }

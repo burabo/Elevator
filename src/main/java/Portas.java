@@ -45,7 +45,7 @@ public class Portas implements Runnable {
                 Thread.sleep(3000);
                 estado = false;
                 System.out.println("Porta fechada. Estado:" + estado);
-                doorSem.release();
+
 
             } catch (InterruptedException e) {
                 System.out.println(nome + "Interrupted");

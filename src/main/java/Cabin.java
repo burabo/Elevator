@@ -1,11 +1,18 @@
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 import java.util.Scanner;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.Semaphore;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 public class Cabin {
 
-    static final int FLOORS = 9; // Default number of floors
     Semaphore moveSem; //Lock do movimento do motor
     Semaphore doorSem; //Lock da abertura das portas
     //protected Portas porta; //Referência para portas
@@ -17,9 +24,13 @@ public class Cabin {
     Properties prop = new Properties();
     String fileName = "about.config";
     InputStream is = null;
+    public final int FLOORS;
+    Logger logger = Logger.getLogger("MyLog"); //New Logger Object
+    FileHandler fh;
 
 
     public Cabin(Semaphore doorSem){
+
         try {
             is = new FileInputStream(fileName);
         } catch (FileNotFoundException e) {
@@ -30,33 +41,52 @@ public class Cabin {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        try {
+
+            // This block configure the logger with handler and formatter
+            fh = new FileHandler("MyLogFile.log");
+            logger.addHandler(fh);
+            SimpleFormatter formatter = new SimpleFormatter();
+            fh.setFormatter(formatter);
+
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //new FileHandler Object
         FLOORS = Integer.valueOf(prop.getProperty("FLOORS"));
         pressedFloors = new TreeSet<>();
         moveSem = new Semaphore(0, true);
         this.doorSem = doorSem;
         //this.porta = porta;
         currentFloor = 0;
+
+
     }
+
     public void setButtons(Botoneira buttons){
         this.buttons = buttons;
     }
 
     public void tryToOpenDoor() throws InterruptedException {
+        logger(FLOORS);
         doorSem.release();
-        Thread.currentThread().sleep(3000);
-        doorSem.acquire();
+        Thread.currentThread().sleep(30);
+
         buttons.menu();
 
     }
 
     public void goToNextSelectedFloor() throws InterruptedException {
         moveSem.release();
-        Thread.currentThread().sleep(3000);
+        Thread.currentThread().sleep(30);
         System.out.println("WENT TO NEXT FLOOR");
 
-        moveSem.acquire();
+
         pressedFloors.remove(currentFloor);
-        tryToOpenDoor();
     }
 
     public void determineNextFloor(){
@@ -96,6 +126,7 @@ public class Cabin {
     public void addFloor(int floor){
         if(currentFloor!=floor && floor<FLOORS && floor>=0) {
             pressedFloors.add(floor);
+            logger(floor);
             determineNextFloor();
         }
     }
@@ -112,10 +143,16 @@ public class Cabin {
         System.out.println(str);
     }
 
-
-    public void menu() throws InterruptedException {
-
+    public void logger(int option){
+        if(option<FLOORS){
+            logger.info("O elevador foi para o piso  " + option);
+        }
+        else if(option==FLOORS){
+            logger.info("As portas foram abertas");
+        }
     }
+
+
 
     public static void main(String[] args) {
 
@@ -127,6 +164,7 @@ public class Cabin {
         Motor motor = new Motor("Motor XPTO 500", cabin, 1000);
         Botoneira botoneira = new Botoneira(cabin, porta);
         cabin.setButtons(botoneira);
+        botoneira.menu();
 
 /*
         Semaphore doorSem = new Semaphore(0);

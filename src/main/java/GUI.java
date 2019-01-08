@@ -33,7 +33,7 @@ public class GUI extends JFrame implements ActionListener {
         textArea.setEditable(false);
         getContentPane().add(BorderLayout.CENTER, textArea);
 
-        for (int i = 0; i<Cabin.FLOORS; i++){
+        for (int i = 0; i<cabin.FLOORS; i++){
             buttons[i] = new JButton(""+i);
             buttons[i].addActionListener(this);
             contentPane.add(buttons[i]);
