@@ -13,29 +13,47 @@ import java.util.logging.SimpleFormatter;
 
 public class Cabin {
 
-    Semaphore moveSem; //Lock do movimento do motor
-    Semaphore doorSem; //Lock da abertura das portas
-    //protected Portas porta; //Referência para portas
-    int currentFloor = 0;
-    int direction = 1; //1 or -1;
-    SortedSet<Integer> pressedFloors; //Conjunto Ordenado dos floors
-    Integer nextFloor;
-    Botoneira buttons;
-    Properties prop = new Properties();
-    String fileName = "about.config";
-    InputStream is = null;
-    public final int FLOORS;
-    Logger logger = Logger.getLogger("MyLog"); //New Logger Object
-    FileHandler fh;
+    //Semaphore Objects
+    Semaphore moveSem; //Motor Lock
+    Semaphore doorSem; //Door Lock
 
+    //Objects from Elevator
+    Botoneira buttons; //Botoneira object
 
+    //Objects related to floors
+    SortedSet<Integer> pressedFloors; //Set that provides a total ordering on the floors
+    Integer nextFloor; // Integer object that stores the next floor
+
+    //Related to logger file
+    Logger logger = Logger.getLogger("MyLog"); // Logger object used to log messages for the Elevator activity
+    FileHandler fh; //FileHandler that write's to a specified file
+
+    //Related to config file
+    String fileName = "about.config"; // Configuration File
+    InputStream is = null; //ImputStream object that read data from the config file
+    Properties prop = new Properties(); //Properties Object
+
+    //Primitive Data Types
+    public final int FLOORS; // Value is  stored in the config file
+    int direction = 1; //Direction of the Elevator. Can either be 1 or -1;
+    int currentFloor = 0; //number of the current floor
+
+    /*
+     *Cabin constructor
+     *
+     */
     public Cabin(Semaphore doorSem){
 
+        /*
+         * Obtains the inputs in the config file and loads it
+         *
+         */
         try {
-            is = new FileInputStream(fileName);
+            is = new FileInputStream(fileName); //obtains input bytes from a file in a file system
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+
         try {
             prop.load(is);
         } catch (IOException e) {
@@ -45,37 +63,41 @@ public class Cabin {
         try {
 
             // This block configure the logger with handler and formatter
-            fh = new FileHandler("MyLogFile.log");
+            fh = new FileHandler("MyLogFile.log"); //Gets the file
             logger.addHandler(fh);
-            SimpleFormatter formatter = new SimpleFormatter();
+            SimpleFormatter formatter = new SimpleFormatter(); //Print log in a human readable format
             fh.setFormatter(formatter);
-
         } catch (SecurityException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        //new FileHandler Object
-        FLOORS = Integer.valueOf(prop.getProperty("FLOORS"));
-        pressedFloors = new TreeSet<>();
-        moveSem = new Semaphore(0, true);
+        FLOORS = Integer.valueOf(prop.getProperty("FLOORS")); //Gets the floor in the config file
+        pressedFloors = new TreeSet<>(); //Implementation of the SortedSet.
+        moveSem = new Semaphore(0, true); //Semaphore with 0 permits and fair = true
         this.doorSem = doorSem;
-        //this.porta = porta;
-        currentFloor = 0;
+        currentFloor = 0; //Sets the current floor to 0
 
 
     }
 
+    /*
+     * Sets Botoneira object from this class to equals Botoneira object
+     * @param {Botoneira} some object
+     */
     public void setButtons(Botoneira buttons){
         this.buttons = buttons;
     }
 
+    /*
+     * Opens Elevator Door
+     *
+     */
     public void tryToOpenDoor() throws InterruptedException {
         logger(FLOORS);
         doorSem.release();
         Thread.currentThread().sleep(30);
-
         buttons.menu();
 
     }
@@ -143,6 +165,10 @@ public class Cabin {
         System.out.println(str);
     }
 
+    /*
+     * Logs a message on the logger
+     * @param {option} some object
+     */
     public void logger(int option){
         if(option<FLOORS){
             logger.info("O elevador foi para o piso  " + option);
@@ -156,8 +182,6 @@ public class Cabin {
 
     public static void main(String[] args) {
 
-
-        //Boolean doorOpenButton = true;
         Semaphore doorSem = new Semaphore(0,true);
         Portas porta = new Portas("Portas", doorSem, true);
         Cabin cabin = new Cabin( doorSem);
@@ -166,17 +190,5 @@ public class Cabin {
         cabin.setButtons(botoneira);
         botoneira.menu();
 
-/*
-        Semaphore doorSem = new Semaphore(0);
-        Cabin cabin = new Cabin( doorSem);
-        Motor motor = new Motor("Motor XPTO 500", cabin, 1000);
-
-        cabin.addFloor(2);
-
-        print("Current floor is \t"+cabin.currentFloor);
-        print("Amount of pressed Floors is \t"+cabin.pressedFloors.size());
-        print("Next floor is \t"+cabin.nextFloor);
-        print("Direction is \t"+cabin.direction);
-*/
     }
 }
